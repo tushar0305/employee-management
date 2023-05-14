@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Search Student by Name -->
+  <div class="row justify-content-between">
+    <div class="col-md-4 mb-4">
+      <form action="{% url 'home' %}" method="GET">
+        <div class="input-group">
+          <input type="text" id="searchInput" name="q" class="form-control" placeholder="Search student...">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#addStudentModal">Add Student</button>
+    </div>
+  </div>
+
+  <div class="row">
+    {% if students %}
+    <div class="col-md-12">
+      <h2>Student List</h2>
+      <div class="form-row">
+
+        <!-- Filter Based on College -->
+        <div class="form-group col-md-4">
+          <label for="collegeFilter">College:</label>
+          <select id="collegeFilter" class="form-control">
+            <option value="">All</option>
+            {% for college in colleges %}
+            <option value="{{ college }}">{{ college }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Filter Based on Selected Role -->
+        <div class="form-group col-md-4">
+          <label for="roleFilter">Selected Role:</label>
+          <select id="roleFilter" class="form-control">
+            <option value="">All</option>
+            <option value="flutter">Flutter</option>
+            <option value="python">Python</option>
+            <option value="web development">Web Development</option>
+            <option value="ui/ux">UI/UX</option>
+            <option value="devops">DevOps</option>
+            <option value="marketing">Marketing</option>
+          </select>
+        </div>
+
+      </div>
+      <div class="table-responsive">
+
+        <!-- Student List Table -->
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>College</th>
+              <th>Selected Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody">
+            {% for student in students %}
+            <tr data-college="{{ student.college }}" data-role="{{ student.selected_role }}">
+              <td>{{ student.name }}</td>
+              <td>{{ student.email }}</td>
+              <td>{{ student.phone }}</td>
+              <td>{{ student.college }}</td>
+              <td>{{ student.selected_role }}</td>
+              <td>
+                <form action="{% url 'delete_student' student.pk %}" method="POST" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6">No students found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Get the input field and table body elements
+  const searchInput = document.getElementById("searchInput");
+  const studentsTableBody = document.getElementById("studentsTableBody");
+
+  // Get the filter elements
+  const collegeFilter = document.getElementById("collegeFilter");
+  const roleFilter = document.getElementById("roleFilter");
+
+  // Add event listeners for input and select fields
+  searchInput.addEventListener("input", () => {
+  const filterValue = searchInput.value.toUpperCase();
+  const rows = studentsTableBody.getElementsByTagName("tr");
+
+  // Loop through table rows and hide those that do not match the search query
+  for (let i = 0; i < rows.length; i++) {
+    const name = rows[i].getElementsByTagName("td")[0];
+    if (name) {
+      const nameValue = name.textContent || name.innerText;
+      if (nameValue.toUpperCase().indexOf(filterValue) > -1) {
+        rows[i].style.display = "";
+      } else {
+        rows[i].style.display = "none";
+      }
+    }
+  }
+ });
+  collegeFilter.addEventListener("change", () => {
+  const filterValue = collegeFilter.value.toUpperCase();
+  const rows = studentsTableBody.getElementsByTagName("tr");
+
+  // Loop through table rows and hide those that do not match the filter
+  for (let i = 0; i < rows.length; i++) {
+    const college = rows[i].getAttribute("data-college");
+    if (filterValue === "" || college.toUpperCase() === filterValue) {
+      rows[i].style.display = "";
+    } else {
+      rows[i].style.display = "none";
+    }
+  }
+  });
+
+  roleFilter.addEventListener("change", () => {
+  const filterValue = roleFilter.value.toUpperCase();
+  const rows = studentsTableBody.getElementsByTagName("tr");
+
+  // Loop through table rows and hide those that do not match the filter
+  for (let i = 0; i < rows.length; i++) {
+    const role = rows[i].getAttribute("data-role");
+    if (filterValue === "" || role.toUpperCase() === filterValue) {
+      rows[i].style.display = "";
+    } else {
+      rows[i].style.display = "none";
+    }
+  }
+  });
+</script>
+
+<style>
+  .table-responsive {
+    overflow-x: auto;
+    max-height: 440px;
+    overflow-y: scroll;
+    position: relative;
+  }
+
+  thead {
+    position: sticky;
+    top: 0; /* Set the distance from the top of the table container */
+    background-color: #f5f5f5; /* Set the background color of the header */
+  }
+</style>
+
+{% endblock %}

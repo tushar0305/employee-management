@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-between">
+    <div class="col-md-4 mb-4">
+      <a href="{% url 'home' %}" class="btn btn-secondary">Back to Student List</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h2>{{ task.title }}</h2>
+      <p><strong>Description:</strong> {{ task.description }}</p>
+      <p><strong>Due Date:</strong> {{ task.due_date }}</p>
+
+      <!-- Add a select element with options for the roles -->
+      <label for="role">Filter by role:</label>
+      <select name="role" id="role">
+        <option value="">All</option>
+        <option value="flutter">Flutter</option>
+        <option value="python">Python</option>
+        <option value="web development">Web Development</option>
+      </select>
+
+      <form method="POST">
+        {% csrf_token %}
+        <h4>Assigned Students:</h4>
+        {% if students %}
+        <ul id="students-list">
+          {% for student in students %}
+          <li class="{{ student.role }}">
+            <label>
+              <input type="checkbox" name="students" value="{{ student.id }}"
+                {% if student in task.students.all %}checked{% endif %}>
+              {{ student.name }}
+            </label>
+          </li>
+          {% empty %}
+          <li>No students assigned to this task.</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Assign Task</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add a script to filter students based on the selected role -->
+<!-- Add a script to filter students based on the selected role -->
+<script>
+  const roleSelect = document.getElementById('role');
+  const studentsList = document.getElementById('students-list');
+
+  roleSelect.addEventListener('change', (event) => {
+    const selectedRole = event.target.value;
+    const students = studentsList.querySelectorAll('li.student');
+
+    students.forEach((student) => {
+      if (selectedRole && !student.classList.contains(selectedRole)) {
+        student.style.display = 'none';
+      } else {
+        student.style.display = 'block';
+      }
+    });
+  });
+</script>
+
+
+
+
+<style>
+    form {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    button[type="submit"] {
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

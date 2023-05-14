@@ -1,0 +1,91 @@
+/* Change the font family and font size of the navbar links */
+.navbar-nav a {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+}
+
+/* Change the background color of the active navbar link */
+.navbar-nav .active > a {
+  background-color: #212529;
+}
+
+/* Change the color of the navbar links on hover */
+.navbar-nav a:hover {
+  color: #fff;
+}
+
+
+/* Body styles */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Navbar styles */
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-link {
+  font-size: 18px;
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.form-control {
+  font-size: 18px;
+}
+
+/* Button styles */
+.btn-primary {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.btn-secondary {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+/* Table styles */
+.table {
+  font-size: 16px;
+}
+
+.table th {
+  font-weight: bold;
+  background-color: #f8f9fa;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.table .text-center {
+  text-align: center;
+}
+
+.table .text-danger {
+  color: #dc3545;
+}
+
+.table .text-success {
+  color: #28a745;
+}
+
